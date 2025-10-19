@@ -67,6 +67,19 @@ fixBtn.Text = "FixLag"
 fixBtn.TextColor3 = Color3.fromRGB(0,0,0)
 fixBtn.Parent = mainFrame
 
+-- 🆕 Graphic Button (Potato Xi Măng)
+local gfxBtn = Instance.new("TextButton")
+gfxBtn.Name = "GfxBtn"
+gfxBtn.Size = UDim2.new(0.6,0,0,40)
+gfxBtn.Position = UDim2.new(0.2,0,0,95)
+gfxBtn.BackgroundColor3 = Color3.fromRGB(120,120,120)
+gfxBtn.Font = Enum.Font.SourceSansBold
+gfxBtn.TextSize = 16
+gfxBtn.Text = "Đồ hoạ: Bình thường"
+gfxBtn.TextColor3 = Color3.fromRGB(255,255,255)
+gfxBtn.AutoButtonColor = true
+gfxBtn.Parent = mainFrame
+
 -- FPS Label
 local fpsLabel = Instance.new("TextButton")
 fpsLabel.Name = "FPSLabel"
@@ -83,10 +96,10 @@ fpsLabel.Parent = screenGui
 
 -- ====== Loading + open main GUI ======
 spawn(function()
-    wait(5)
-    loadingFrame.Visible = false
-    mainFrame.Visible = true
-    TweenService:Create(mainFrame, TweenInfo.new(0.3,Enum.EasingStyle.Quad,Enum.EasingDirection.Out), {Size=UDim2.new(0,240,0,110)}):Play()
+	wait(5)
+	loadingFrame.Visible = false
+	mainFrame.Visible = true
+	TweenService:Create(mainFrame, TweenInfo.new(0.3,Enum.EasingStyle.Quad,Enum.EasingDirection.Out), {Size=UDim2.new(0,240,0,150)}):Play()
 end)
 
 -- ====== FPS Realtime ======
@@ -94,60 +107,98 @@ local fps = 0
 local smoothing = 0.1
 local lastTime = tick()
 RunService.RenderStepped:Connect(function()
-    local now = tick()
-    local dt = now - lastTime
-    lastTime = now
-    local instant = 1/math.max(dt,1/120)
-    fps = fps + (instant - fps)*smoothing
-    fpsLabel.Text = "FPS: "..math.floor(fps+0.5)
+	local now = tick()
+	local dt = now - lastTime
+	lastTime = now
+	local instant = 1/math.max(dt,1/120)
+	fps = fps + (instant - fps)*smoothing
+	fpsLabel.Text = "FPS: "..math.floor(fps+0.5)
 end)
 
 -- FPS toggle
 local minimized = false
 fpsLabel.MouseButton1Click:Connect(function()
-    minimized = not minimized
-    if minimized then
-        fpsLabel.Size = UDim2.new(0,50,0,20)
-        fpsLabel.Text = math.floor(fps+0.5)
-    else
-        fpsLabel.Size = UDim2.new(0,100,0,24)
-        fpsLabel.Text = "FPS: "..math.floor(fps+0.5)
-    end
+	minimized = not minimized
+	if minimized then
+		fpsLabel.Size = UDim2.new(0,50,0,20)
+		fpsLabel.Text = math.floor(fps+0.5)
+	else
+		fpsLabel.Size = UDim2.new(0,100,0,24)
+		fpsLabel.Text = "FPS: "..math.floor(fps+0.5)
+	end
 end)
 
 -- ====== FixLag Function ======
 local fixed = false
 local function fixLag()
-    if fixed then return end
-    fixed = true
-    fixBtn.Text = "Đang tối ưu..."
-    -- Disable Lighting effects
-    for _,v in pairs(Lighting:GetDescendants()) do
-        if v:IsA("PostEffect") or v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("SunRaysEffect") then
-            pcall(function() v.Enabled = false end)
-        end
-    end
-    Lighting.GlobalShadows = false
-    Lighting.FogEnd = 1e9
-    Lighting.FogStart = 0
-    -- Disable particles and trails
-    for _,v in pairs(workspace:GetDescendants()) do
-        if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Fire") or v:IsA("Smoke") or v:IsA("Sparkles") then
-            pcall(function() v.Enabled=false end)
-        end
-        if v:IsA("BasePart") then
-            v.CastShadow = false
-            local nameLower = (v.Name or ""):lower()
-            if string.find(nameLower,"leaf") or string.find(nameLower,"foliage") then
-                v.LocalTransparencyModifier = 1
-            end
-        end
-    end
-    -- Mute sounds
-    SoundService.Volume = 0
-    fixBtn.Text = "Đã tối ưu ✔"
-    wait(1.2)
-    fixBtn.Text = "FixLag"
+	if fixed then return end
+	fixed = true
+	fixBtn.Text = "Đang tối ưu..."
+	-- Disable Lighting effects
+	for _,v in pairs(Lighting:GetDescendants()) do
+		if v:IsA("PostEffect") or v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("SunRaysEffect") then
+			pcall(function() v.Enabled = false end)
+		end
+	end
+	Lighting.GlobalShadows = false
+	Lighting.FogEnd = 1e9
+	Lighting.FogStart = 0
+	-- Disable particles and trails
+	for _,v in pairs(workspace:GetDescendants()) do
+		if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Fire") or v:IsA("Smoke") or v:IsA("Sparkles") then
+			pcall(function() v.Enabled=false end)
+		end
+		if v:IsA("BasePart") then
+			v.CastShadow = false
+			local nameLower = (v.Name or ""):lower()
+			if string.find(nameLower,"leaf") or string.find(nameLower,"foliage") then
+				v.LocalTransparencyModifier = 1
+			end
+		end
+	end
+	-- Mute sounds
+	SoundService.Volume = 0
+	fixBtn.Text = "Đã tối ưu ✔"
+	wait(1.2)
+	fixBtn.Text = "FixLag"
 end
 
 fixBtn.MouseButton1Click:Connect(fixLag)
+
+-- ====== Đồ hoạ Potato Xi Măng ======
+local potato = false
+local function togglePotato()
+	potato = not potato
+	if potato then
+		gfxBtn.Text = "💀 Đồ hoạ: POTATO XI MĂNG 💀"
+		gfxBtn.BackgroundColor3 = Color3.fromRGB(90,90,90)
+		print("💀 Đã bật chế độ đồ hoạ POTATO XI MĂNG 💀")
+
+		-- Giảm mạnh đồ hoạ
+		Lighting.GlobalShadows = false
+		Lighting.FogEnd = 1e9
+		Lighting.Brightness = 0
+		Lighting.Ambient = Color3.fromRGB(0,0,0)
+		for _,v in pairs(Lighting:GetDescendants()) do
+			pcall(function() v.Enabled = false end)
+		end
+		for _,v in pairs(workspace:GetDescendants()) do
+			if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Fire") or v:IsA("Smoke") or v:IsA("Sparkles") then
+				pcall(function() v.Enabled=false end)
+			end
+			if v:IsA("BasePart") then
+				v.CastShadow = false
+				v.Material = Enum.Material.SmoothPlastic
+				v.Reflectance = 0
+			end
+		end
+		SoundService.Volume = 0
+	else
+		gfxBtn.Text = "Đồ hoạ: Bình thường"
+		gfxBtn.BackgroundColor3 = Color3.fromRGB(120,120,120)
+		print("🔄 Đã trở về chế độ đồ hoạ bình thường")
+		SoundService.Volume = 1
+	end
+end
+
+gfxBtn.MouseButton1Click:Connect(togglePotato)
